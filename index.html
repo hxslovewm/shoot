@@ -1,0 +1,213 @@
+2000
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>射箭英雄传</title>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="full-screen" content="yes"/>
+    <meta name="screen-orientation" content="portrait"/>
+    <meta name="viewport" content="target-densitydpi=high-dpi,width=device-width"/>
+    <meta name="x5-fullscreen" content="true"/>
+    <meta http-equiv="Access-Control-Allow-Origin" content="*"/>
+    <meta name="360-fullscreen" content="true"/>
+    
+
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script> 
+    	var params = JSON.parse('{"timestamp":"1471247430","appid":"wxd4449d53894b6ba0","nonceStr":"f0c10b4d-27e3-4b7f-be8a-201a76d7fe3c","jsapi_ticket":"sM4AOVdWfPE4DxkXGEs8VBhD5tGXdCeYd4dz0P5fgAD2CcryJOtLMwZzeeORK0leqBRYSlT2m5usg8Gxpgt-1g","signature":"1d66a49386982dfeae619f7e89abc74e8f7e7bfd","url":"http://game.91yixun.cn/GameMS/games/arrow/oauthAction.action?code=031WKQx81IYhRV1N6Zz81kyJx81WKQx7&state=STATE"}');
+    	var modulus = '00991fd6f93c9b2abf2b6354a8d1440ebc818ae4dbd0cd4ce7872c788a14d8312272af854f5e50479dfcc27fda841e597c7c5ba85902693a34e81fef439f00785ea91bccb05aa762d94cfdcbfba40d45f7a279147a315c948ffaff2292b0736b1a673c79f9916deb090ef852fe9b03d0ccff2e1348d4fd2b29250cdd18e34bf841', exponent = '010001';
+
+    	var gameInfo = {"gameState":'0',
+    			"link":'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd4449d53894b6ba0&redirect_uri=http%3A%2F%2Fgame.91yixun.cn%2FGameMS%2Fgames%2Farrow%2FoauthAction.action&response_type=code&scope=snsapi_base&state=oqfKxt3xkFP6eOhIasvVgjJOWBl8#wechat_redirect',
+    			"phone":''}
+    	
+    	/* "headImgUrl":helperLists[i].userOpenid.headImgUrl, */
+	</script>
+	
+	<script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+	<script type="text/javascript" src="js/wxjs.js"></script>
+	<script src="js/security.js"></script>
+	<script src="js/tinybox.js"></script>
+	<script src="js/ui.js"></script>
+	
+	<script>
+    var shareData = {
+        title: '张弓走天下，相聚在清河',
+        desc: '敦亲睦祖   弘扬文化   合作发展    圆梦中华',
+        link:'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd4449d53894b6ba0&redirect_uri=http%3A%2F%2Fgame.91yixun.cn%2FGameMS%2Fgames%2Farrow%2FoauthAction.action&response_type=code&scope=snsapi_base&state=oqfKxt3xkFP6eOhIasvVgjJOWBl8#wechat_redirect',
+        imgUrl: 'http://game.91yixun.cn/GameMS/games/arrow/images/share.png',	
+        success: function (res) {
+        	$.post("ajaxPost!shareFriend.action");
+        }
+    };
+    var shareData1  = shareData
+    
+    wx.onMenuShareAppMessage(shareData);
+    wx.onMenuShareTimeline(shareData1);
+    
+</script>
+	<link rel="stylesheet" type="text/css" href="css/reset.css"/>
+    <style>
+        body, canvas, div {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            -khtml-user-select: none;
+            /*-webkit-tap-highlight-color: rgba(0, 0, 0, 0);*/
+        }
+    </style>
+    <style>
+		.tbox {position:absolute; display:none; padding:14px 17px; z-index:900}
+		.tinner {padding:15px; -moz-border-radius:5px; border-radius:5px; background:#fff url(images/preload.gif) no-repeat 50% 50%; border-right:1px solid #333; border-bottom:1px solid #333}
+		.tmask {position:absolute; display:none; top:0px; left:0px; height:100%; width:100%; background:#000; z-index:800}
+		#error {background:#ff6969; color:#fff; text-shadow:1px 1px #cf5454; border-right:1px solid #000; border-bottom:1px solid #000; padding:0}
+		#error .tcontent {padding:10px 14px 11px; border:1px solid #ffb8b8; -moz-border-radius:5px; border-radius:5px}
+	</style>
+	<script type="text/javascript">
+	    var audio_flag = false; 
+		document.addEventListener("touchstart", function(e) {
+	        if (!audio_flag){
+	            /* beep = document.createElement('audio');
+	            beep.setAttribute('src', 'res/music.wav');
+	            beep.loop = 'loop'; 
+	            beep.load();*/
+	            beep = document.getElementById("audio");
+	            beep.play();
+	            audio_flag = true;
+	        }
+	        //e.returnValue = false;
+	    }, true);
+	</script>
+</head>
+<body style="padding:0; margin: 0;">
+    <canvas id="gameCanvas" width="320" height="480"></canvas>
+	<audio id="audio" src="res/music.mp3" loop="loop" preload="auto"></audio>
+<!--提交信息页面-->
+<div id="tjxx" style="display:none">
+	<img id="bg_tjxx" src="images/bg_tjxx.jpg"/>
+    <p id="score">30</p>
+    <input type="tel" name="phone" id="phone" placeholder="请输入您的手机号码"/>
+    <p id="phone_tip"></p>
+    <img id="btn_qd" src="images/btn_qd.png"/>
+</div>
+
+<!--排行榜-->
+<div id="phb" style="display:none">
+	<img id="bg_phb" src="images/bg_phb.jpg"/>
+	<div id="list">
+        <ul id="content" class="phb1">
+        	
+	            <li class="li_first">
+	                <ul>
+	                    <li class="li1 font">1</li>
+	                    <li class="li2 font">131****7801</li>
+	                    <li class="li3 font">47.46</li>
+	                </ul>
+	            </li>
+            
+	            <li class="li_first">
+	                <ul>
+	                    <li class="li1 font">2</li>
+	                    <li class="li2 font">136****3152</li>
+	                    <li class="li3 font">47.09</li>
+	                </ul>
+	            </li>
+            
+	            <li class="li_first">
+	                <ul>
+	                    <li class="li1 font">3</li>
+	                    <li class="li2 font">186****6686</li>
+	                    <li class="li3 font">46.84</li>
+	                </ul>
+	            </li>
+            
+	            <li class="li_first">
+	                <ul>
+	                    <li class="li1 font">4</li>
+	                    <li class="li2 font">137****2503</li>
+	                    <li class="li3 font">46.07</li>
+	                </ul>
+	            </li>
+            
+	            <li class="li_first">
+	                <ul>
+	                    <li class="li1 font">5</li>
+	                    <li class="li2 font">159****5305</li>
+	                    <li class="li3 font">45.0</li>
+	                </ul>
+	            </li>
+            
+	            <li class="li_first">
+	                <ul>
+	                    <li class="li1 font">6</li>
+	                    <li class="li2 font">187****8253</li>
+	                    <li class="li3 font">44.33</li>
+	                </ul>
+	            </li>
+            
+	            <li class="li_first">
+	                <ul>
+	                    <li class="li1 font">7</li>
+	                    <li class="li2 font">139****0859</li>
+	                    <li class="li3 font">44.29</li>
+	                </ul>
+	            </li>
+            
+	            <li class="li_first">
+	                <ul>
+	                    <li class="li1 font">8</li>
+	                    <li class="li2 font">159****2241</li>
+	                    <li class="li3 font">44.08</li>
+	                </ul>
+	            </li>
+            
+	            <li class="li_first">
+	                <ul>
+	                    <li class="li1 font">9</li>
+	                    <li class="li2 font">186****8613</li>
+	                    <li class="li3 font">44.02</li>
+	                </ul>
+	            </li>
+            
+	            <li class="li_first">
+	                <ul>
+	                    <li class="li1 font">10</li>
+	                    <li class="li2 font">187****0570</li>
+	                    <li class="li3 font">44.02</li>
+	                </ul>
+	            </li>
+            
+        </ul>
+    </div>  
+	<ul id="list2">
+    	<li>
+        	<ul>
+            	<li class="li1">255</li>
+                <li class="li2"></li>
+                <li class="li3">0.0</li>
+            </ul>
+        </li>
+    </ul>
+	<img id="btn_return" src="images/btn_return.png" />
+</div>
+
+<!--     <script type="text
+1d9
+/javascript" src="src/cocos2d-js-v3.5.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="src/main.js?time=123456" charset="UTF-8"></script> -->
+    <script type="text/javascript" src="game.min.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="js/fontSize.js"></script>
+	<script type="text/javascript">
+		$("#btn_return").click(function(){
+			$("#gameCanvas").show();
+	        $("#phb").hide();
+		});
+	</script>
+</body>
+</html>
+0
+
